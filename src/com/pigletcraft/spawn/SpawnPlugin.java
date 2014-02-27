@@ -407,17 +407,17 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
             case "scanfw":
                 if (sender instanceof Player) {
-                    Player player = (Player)sender;
+                    Player player = (Player) sender;
                     if (player.isOp()) {
                         RegionManager rm = worldGuard.getRegionManager(player.getWorld());
                         ProtectedRegion r = rm.getRegion("spawn");
-                        for(int i = r.getMinimumPoint().getBlockX(); i < r.getMaximumPoint().getBlockX(); i ++) {
-                            for (int j = r.getMinimumPoint().getBlockY(); j < r.getMaximumPoint().getBlockY(); j ++) {
-                                for (int k = r.getMinimumPoint().getBlockZ(); k < r.getMaximumPoint().getBlockZ(); k ++) {
+                        for (int i = r.getMinimumPoint().getBlockX(); i < r.getMaximumPoint().getBlockX(); i++) {
+                            for (int j = r.getMinimumPoint().getBlockY(); j < r.getMaximumPoint().getBlockY(); j++) {
+                                for (int k = r.getMinimumPoint().getBlockZ(); k < r.getMaximumPoint().getBlockZ(); k++) {
                                     Location l = new Location(player.getWorld(), i, j, k);
                                     Block b = player.getWorld().getBlockAt(l);
                                     if (b.getType() == Material.SKULL) {
-                                        if (((Skull)b.getState()).getOwner().equals("MHF_TNT2")) {
+                                        if (((Skull) b.getState()).getOwner().equals("MHF_TNT2")) {
                                             fireworkSpawnerLocations.add(new FireworkLocation(l));
                                         }
                                     }
@@ -585,7 +585,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     /**
      * Monitors entities for damage and takes action in certain situations
-     * 1) Punishes players with lighting strike for attacking piglets
+     * 1) Punishes players with the "P.I.G" for attacking piglets
      * 2) Spawns the "P.I.G" to deal retribution for PVP in spawn and other protected zones
      *
      * @param event EntityDamageByEntityEvent to check for infractions
@@ -604,6 +604,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 if (!pig.isAdult()) {
                     //player.getWorld().strikeLightning(player.getLocation());
                     spawnPIG(player);
+                    player.sendMessage(ChatColor.LIGHT_PURPLE +"Attacking Piglets is a capital offence!");
                 }
                 return;
             }
