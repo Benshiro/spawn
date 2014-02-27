@@ -405,6 +405,29 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         switch (cmd.getName()) {
 
+            case "scanfw":
+                if (sender instanceof Player) {
+                    Player player = (Player)sender;
+                    if (player.isOp()) {
+                        RegionManager rm = worldGuard.getRegionManager(player.getWorld());
+                        ProtectedRegion r = rm.getRegion("spawn");
+                        for(int i = r.getMinimumPoint().getBlockX(); i < r.getMaximumPoint().getBlockX(); i ++) {
+                            for (int j = r.getMinimumPoint().getBlockY(); j < r.getMaximumPoint().getBlockY(); j ++) {
+                                for (int k = r.getMinimumPoint().getBlockZ(); k < r.getMaximumPoint().getBlockZ(); k ++) {
+                                    Location l = new Location(player.getWorld(), i, j, k);
+                                    Block b = player.getWorld().getBlockAt(l);
+                                    if (b.getType() == Material.SKULL) {
+                                        if (((Skull)b.getState()).getOwner().equals("MHF_TNT2")) {
+                                            fireworkSpawnerLocations.add(new FireworkLocation(l));
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                break;
+
             case "fwblock":
                 if (sender instanceof BlockCommandSender) {
                     fireworkCounter++;

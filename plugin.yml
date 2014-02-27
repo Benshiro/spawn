@@ -13,3 +13,5 @@ commands:
     permission: spawn.firework
   rain:
     permission: spawn.rain
+  scanfw:
+    permission: spawn.scanfw
