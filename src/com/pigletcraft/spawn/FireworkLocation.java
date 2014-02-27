@@ -21,7 +21,7 @@ public class FireworkLocation implements Serializable {
     public boolean equals(Object other) {
 
         if (other instanceof FireworkLocation) {
-            FireworkLocation location = (FireworkLocation)other;
+            FireworkLocation location = (FireworkLocation) other;
             return location.x == this.x && location.y == this.y && location.z == this.z;
         }
 

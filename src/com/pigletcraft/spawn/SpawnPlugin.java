@@ -28,7 +28,6 @@ import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,22 +41,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static com.sk89q.worldguard.bukkit.BukkitUtil.toVector;
 
 /**
- * Created by Benshiro on 27/02/14.
+ * Spawn plugin for Pigletcraft
+ *
+ * @author Ben Carvell
+ * @author Geoff Wilson
  */
 public class SpawnPlugin extends JavaPlugin implements Listener {
 
     // WorldGuard
     private WorldGuardPlugin worldGuard;
-
     private int fireWorkTaskID;
     private int pigletRainTaskID;
     private int pigletUndoTaskID;
-
     private ArrayList<FireworkLocation> fireworkSpawnerLocations;
     private int fireworkCounter = 0;
-
     private ConcurrentLinkedQueue<Pig> pigRain;
-
     private Color[] colors;
 
     private WorldGuardPlugin getWorldGuard() {
@@ -73,7 +71,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         worldGuard = getWorldGuard();
 
-        colors = new Color[]{Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON, Color.fromRGB(0xF03D7B), Color.NAVY, Color.ORANGE, Color.PURPLE, Color.RED, Color.SILVER, Color.TEAL, Color.WHITE, Color.YELLOW, Color.fromRGB(255, 123, 0)};
+        colors = new Color[]{Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON, Color.fromRGB(0xFF7F00), Color.fromRGB(0xD63400), Color.fromRGB(0x8E0F08), Color.fromRGB(0xDEF3F8), Color.fromRGB(0x32A2A4), Color.fromRGB(0x17529E), Color.NAVY, Color.ORANGE, Color.PURPLE, Color.RED, Color.SILVER, Color.TEAL, Color.WHITE, Color.YELLOW, Color.fromRGB(255, 123, 0)};
 
         this.pigRain = new ConcurrentLinkedQueue<>();
         this.fireworkSpawnerLocations = new ArrayList<>();
@@ -86,113 +84,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             e.printStackTrace();
         }
 
-    }
-
-    private class PigRainRunnable implements Runnable {
-        private World world;
-        private Player player;
-        private JavaPlugin parent;
-
-        private AtomicInteger pigCounter = new AtomicInteger(0);
-
-        public PigRainRunnable(World world, Player player, JavaPlugin parent) {
-            this.world = world;
-            this.player = player;
-            this.parent = parent;
-
-            world.setStorm(true);
-            world.setThundering(true);
-        }
-
-        @Override
-        public void run() {
-            int x = pigCounter.incrementAndGet();
-
-            int randomX = (int) (Math.random() * 15);
-            int randomZ = (int) (Math.random() * 15);
-
-            Location playerLocation = player.getLocation();
-
-            boolean flip = Math.random() >= 0.50D;
-            int newX = flip ? playerLocation.getBlockX() + randomX : playerLocation.getBlockX() - randomX;
-            flip = Math.random() >= 0.50D;
-            int newZ = flip ? playerLocation.getBlockZ() + randomZ : playerLocation.getBlockZ() - randomZ;
-
-            Location spawnLocation = new Location(player.getWorld(), newX, 128, newZ);
-
-            if (Math.random() > 0.75D) world.strikeLightning(spawnLocation.add(100, 0, 0));
-
-            Pig piglet = (Pig) this.world.spawnEntity(spawnLocation, EntityType.PIG);
-            piglet.setBaby();
-            piglet.setMetadata("pig_rain", new FixedMetadataValue(parent, true));
-
-            pigRain.add(piglet);
-
-            if (x >= 100) {
-                getServer().getScheduler().cancelTask(pigletRainTaskID);
-                pigletUndoTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new PigletRemoverRunnable(), 100, 15);
-                world.setStorm(false);
-                world.setThundering(false);
-                pigletRainTaskID = 0;
-            }
-        }
-    }
-
-    private class PigletRemoverRunnable implements Runnable {
-        @Override
-        public void run() {
-            if (pigRain.size() > 0) {
-                Pig pig = pigRain.poll();
-                pig.remove();
-            } else {
-                getServer().getScheduler().cancelTask(pigletUndoTaskID);
-            }
-        }
-    }
-
-    private class FireworkRunnable implements Runnable {
-
-        private Location[] spanwerLocations;
-
-        private World world;
-
-        private long startTime;
-        private int mode;
-
-        private JavaPlugin parent;
-
-        public FireworkRunnable(World world, int mode, JavaPlugin parent, Location[] locations) {
-            this.world = world;
-            this.mode = mode;
-            this.parent = parent;
-            this.spanwerLocations = locations;
-
-            startTime = System.currentTimeMillis();
-        }
-
-        @Override
-        public void run() {
-
-            for (Location l : spanwerLocations) {
-                Firework firework = (Firework) world.spawnEntity(l, EntityType.FIREWORK);
-                spawnBallFirework(firework);
-            }
-
-            switch (mode) {
-                case 0:
-                    if (System.currentTimeMillis() - startTime > 30000) {
-                        getServer().getScheduler().cancelTask(fireWorkTaskID);
-
-                        // Schedule new task
-                        fireWorkTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new FireworkRunnable(getServer().getWorld("world"), 1, parent, spanwerLocations), 20L, 10L);
-                    }
-
-                    break;
-                case 1:
-                    if (System.currentTimeMillis() - startTime > 10000)
-                        getServer().getScheduler().cancelTask(fireWorkTaskID);
-            }
-        }
     }
 
     @Override
@@ -223,7 +114,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             PigZombie guard = (PigZombie) player.getWorld().spawnEntity(spawnLocation, EntityType.PIG_ZOMBIE);
             EntityEquipment ee = guard.getEquipment();
 
-            //player.getWorld().strikeLightning(player.getLocation()); // Fire hazard to removed
             HashMap<Enchantment, Integer> enchantmentIntegerHashMap = new HashMap<>();
             enchantmentIntegerHashMap.put(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
             enchantmentIntegerHashMap.put(Enchantment.THORNS, 3);
@@ -238,9 +128,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             sword.addEnchantment(Enchantment.FIRE_ASPECT, 2);
             sword.addEnchantment(Enchantment.DAMAGE_ALL, 5);
             ee.setItemInHand(sword);
-
-                /*ItemStack bow = new ItemStack(Material.BOW);
-                ee.setItemInHand(bow);    */
 
             guard.setMetadata("guard.target", new FixedMetadataValue(this, player.getName()));
 
@@ -274,7 +161,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         }
         return true;
     }
-
 
     /**
      * Takes an item stack and applies color to the meat data (use for coloring Armor)
@@ -365,11 +251,8 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         else if (random < 0.6D) effectBuilder.flicker(true);
 
         fireworkMeta.addEffect(effectBuilder.build());
-        fireworkMeta.setPower(3);
 
-        ItemStack s = new ItemStack(Material.SKULL_ITEM, 3);
-        SkullMeta m = (SkullMeta) s.getItemMeta();
-        MaterialData md = s.getData();
+        fireworkMeta.setPower(3);
 
         fireWork.setFireworkMeta(fireworkMeta);
     }
@@ -407,17 +290,17 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
             case "scanfw":
                 if (sender instanceof Player) {
-                    Player player = (Player)sender;
+                    Player player = (Player) sender;
                     if (player.isOp()) {
                         RegionManager rm = worldGuard.getRegionManager(player.getWorld());
                         ProtectedRegion r = rm.getRegion("spawn");
-                        for(int i = r.getMinimumPoint().getBlockX(); i < r.getMaximumPoint().getBlockX(); i ++) {
-                            for (int j = r.getMinimumPoint().getBlockY(); j < r.getMaximumPoint().getBlockY(); j ++) {
-                                for (int k = r.getMinimumPoint().getBlockZ(); k < r.getMaximumPoint().getBlockZ(); k ++) {
+                        for (int i = r.getMinimumPoint().getBlockX(); i < r.getMaximumPoint().getBlockX(); i++) {
+                            for (int j = r.getMinimumPoint().getBlockY(); j < r.getMaximumPoint().getBlockY(); j++) {
+                                for (int k = r.getMinimumPoint().getBlockZ(); k < r.getMaximumPoint().getBlockZ(); k++) {
                                     Location l = new Location(player.getWorld(), i, j, k);
                                     Block b = player.getWorld().getBlockAt(l);
                                     if (b.getType() == Material.SKULL) {
-                                        if (((Skull)b.getState()).getOwner().equals("MHF_TNT2")) {
+                                        if (((Skull) b.getState()).getOwner().equals("MHF_TNT2")) {
                                             fireworkSpawnerLocations.add(new FireworkLocation(l));
                                         }
                                     }
@@ -535,8 +418,8 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        Player p = event.getPlayer();
 
+        Player p = event.getPlayer();
 
         if (p.isOp() && inSpawn(p)) {
             Block b = event.getBlock();
@@ -582,7 +465,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         }
     }
 
-
     /**
      * Monitors entities for damage and takes action in certain situations
      * 1) Punishes players with lighting strike for attacking piglets
@@ -613,6 +495,109 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 if (inSpawn(player)) {
                     spawnPIG(player);
                 }
+            }
+        }
+    }
+
+    private class PigRainRunnable implements Runnable {
+        private World world;
+        private Player player;
+        private JavaPlugin parent;
+        private AtomicInteger pigCounter = new AtomicInteger(0);
+
+        public PigRainRunnable(World world, Player player, JavaPlugin parent) {
+            this.world = world;
+            this.player = player;
+            this.parent = parent;
+
+            world.setStorm(true);
+            world.setThundering(true);
+        }
+
+        @Override
+        public void run() {
+            int x = pigCounter.incrementAndGet();
+
+            int randomX = (int) (Math.random() * 15);
+            int randomZ = (int) (Math.random() * 15);
+
+            Location playerLocation = player.getLocation();
+
+            boolean flip = Math.random() >= 0.50D;
+            int newX = flip ? playerLocation.getBlockX() + randomX : playerLocation.getBlockX() - randomX;
+            flip = Math.random() >= 0.50D;
+            int newZ = flip ? playerLocation.getBlockZ() + randomZ : playerLocation.getBlockZ() - randomZ;
+
+            Location spawnLocation = new Location(player.getWorld(), newX, 128, newZ);
+
+            if (Math.random() > 0.75D) world.strikeLightning(spawnLocation.add(100, 0, 0));
+
+            Pig piglet = (Pig) this.world.spawnEntity(spawnLocation, EntityType.PIG);
+            piglet.setBaby();
+            piglet.setMetadata("pig_rain", new FixedMetadataValue(parent, true));
+
+            pigRain.add(piglet);
+
+            if (x >= 100) {
+                getServer().getScheduler().cancelTask(pigletRainTaskID);
+                pigletUndoTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new PigletRemoverRunnable(), 100, 15);
+                world.setStorm(false);
+                world.setThundering(false);
+                pigletRainTaskID = 0;
+            }
+        }
+    }
+
+    private class PigletRemoverRunnable implements Runnable {
+        @Override
+        public void run() {
+            if (pigRain.size() > 0) {
+                Pig pig = pigRain.poll();
+                pig.remove();
+            } else {
+                getServer().getScheduler().cancelTask(pigletUndoTaskID);
+            }
+        }
+    }
+
+    private class FireworkRunnable implements Runnable {
+
+        private Location[] spanwerLocations;
+        private World world;
+        private long startTime;
+        private int mode;
+        private JavaPlugin parent;
+
+        public FireworkRunnable(World world, int mode, JavaPlugin parent, Location[] locations) {
+            this.world = world;
+            this.mode = mode;
+            this.parent = parent;
+            this.spanwerLocations = locations;
+
+            startTime = System.currentTimeMillis();
+        }
+
+        @Override
+        public void run() {
+
+            for (Location l : spanwerLocations) {
+                Firework firework = (Firework) world.spawnEntity(l, EntityType.FIREWORK);
+                spawnBallFirework(firework);
+            }
+
+            switch (mode) {
+                case 0:
+                    if (System.currentTimeMillis() - startTime > 30000) {
+                        getServer().getScheduler().cancelTask(fireWorkTaskID);
+
+                        // Schedule new task
+                        fireWorkTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new FireworkRunnable(getServer().getWorld("world"), 1, parent, spanwerLocations), 20L, 10L);
+                    }
+
+                    break;
+                case 1:
+                    if (System.currentTimeMillis() - startTime > 10000)
+                        getServer().getScheduler().cancelTask(fireWorkTaskID);
             }
         }
     }
