@@ -467,7 +467,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     /**
      * Monitors entities for damage and takes action in certain situations
-     * 1) Punishes players with lighting strike for attacking piglets
+     * 1) Punishes players with the "P.I.G" for attacking piglets
      * 2) Spawns the "P.I.G" to deal retribution for PVP in spawn and other protected zones
      *
      * @param event EntityDamageByEntityEvent to check for infractions
@@ -486,6 +486,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 if (!pig.isAdult()) {
                     //player.getWorld().strikeLightning(player.getLocation());
                     spawnPIG(player);
+                    player.sendMessage(ChatColor.LIGHT_PURPLE +"Attacking Piglets is a capital offence!");
                 }
                 return;
             }
