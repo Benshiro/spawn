@@ -1,0 +1,15 @@
+name: PigletSpawn
+main: com.pigletcraft.spawn.SpawnPlugin
+version: 1.0
+
+commands:
+  ynennjgkamvpctbfrcrz:
+    permission: spawn.tnt
+  tnt:
+    permission: spawn.tnt
+  fw:
+    permission: spawn.firework
+  fwblock:
+    permission: spawn.firework
+  rain:
+    permission: spawn.rain
