@@ -110,15 +110,24 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         int[] zLocations = {z + 5, z + 5, z - 5, z - 5};
 
         for (int i = 0; i < 4; i++) {
+            double random = Math.random();
+
+            Zombie guard;
+
             Location spawnLocation = new Location(player.getWorld(), xLocations[i], y, zLocations[i]);
-            PigZombie guard = (PigZombie) player.getWorld().spawnEntity(spawnLocation, EntityType.PIG_ZOMBIE);
+            guard = (Zombie) player.getWorld().spawnEntity(spawnLocation, random >= 0.50 ? EntityType.ZOMBIE : EntityType.PIG_ZOMBIE);
             EntityEquipment ee = guard.getEquipment();
 
             HashMap<Enchantment, Integer> enchantmentIntegerHashMap = new HashMap<>();
             enchantmentIntegerHashMap.put(Enchantment.PROTECTION_ENVIRONMENTAL, 3);
             enchantmentIntegerHashMap.put(Enchantment.THORNS, 3);
 
-            ee.setHelmet(setArmorColor(Color.BLACK, new ItemStack(Material.LEATHER_HELMET)));
+            ItemStack skullHead = new ItemStack(Material.SKULL_ITEM, 1, (byte) 3);
+            SkullMeta skullMeta = (SkullMeta) skullHead.getItemMeta();
+            skullMeta.setOwner("BillyLeBoar");
+            skullHead.setItemMeta(skullMeta);
+
+            ee.setHelmet(random >= 0.5 ? skullHead : setArmorColor(Color.BLACK, new ItemStack(Material.LEATHER_HELMET)));
             ee.setChestplate(setArmorColor(Color.BLACK, new ItemStack(Material.LEATHER_CHESTPLATE)));
             ee.getChestplate().addEnchantments(enchantmentIntegerHashMap);
             ee.setLeggings(setArmorColor(Color.BLACK, new ItemStack(Material.LEATHER_LEGGINGS)));
@@ -131,7 +140,9 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
             guard.setMetadata("guard.target", new FixedMetadataValue(this, player.getName()));
 
-            guard.setAngry(true);
+            if (random < 0.5) {
+                ((PigZombie) guard).setAngry(true);
+            }
             guard.setTarget(player);
         }
     }
@@ -486,7 +497,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 if (!pig.isAdult()) {
                     //player.getWorld().strikeLightning(player.getLocation());
                     spawnPIG(player);
-                    player.sendMessage(ChatColor.LIGHT_PURPLE +"Attacking Piglets is a capital offence!");
+                    player.sendMessage(ChatColor.LIGHT_PURPLE + "Attacking Piglets is a capital offence!");
                 }
                 return;
             }
