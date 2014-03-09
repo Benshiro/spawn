@@ -521,13 +521,24 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         Inventory inventory = event.getInventory();             //Get the Inventory that took the item
         Material itemType = event.getItem().getItemStack().getType();   //Get the item that was picked up
         if (inventory.getHolder() instanceof Hopper) {          //Check inventory is a hopper
-        Hopper hopper = (Hopper) inventory.getHolder();
+            Hopper hopper = (Hopper) inventory.getHolder();
             Location hopperLocation = hopper.getLocation();     //Get the hopper location and store xyz
             int x = hopperLocation.getBlockX();
             int y = hopperLocation.getBlockY();
             int z = hopperLocation.getBlockZ();
-            if (532<x&&x<536&&y==18&&-214<z&&z<-210){           // Check this is a Billy hopper
+            if (532 < x && x < 536 && y == 18 && -214 < z && z < -210) {           // Check this is a Billy hopper
+
+
                 switch (itemType) {
+                    case GRILLED_PORK:
+                        Location pillarOne = new Location(hopper.getWorld(), 543, 21, -210);
+                        Location pillarTwo = new Location(hopper.getWorld(), 525, 21, -210);
+                        for (int i = 1; i < 11; i++) {
+                            pillarOne.getWorld().getBlockAt(pillarOne).setTypeId(46);
+                            pillarTwo.getWorld().getBlockAt(pillarTwo).setTypeId(46);
+                        }
+                        break;
+
 
                 }
             }
