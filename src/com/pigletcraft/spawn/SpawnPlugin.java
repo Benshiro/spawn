@@ -7,6 +7,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.Hopper;
 import org.bukkit.block.Skull;
 import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.Command;
@@ -21,8 +22,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -469,10 +472,11 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         if (victim instanceof Pig) {
             Pig pig = (Pig) victim;
-            if (pig.hasMetadata("pig_rain")) {
+            if (pig.hasMetadata("pig_rain") || pig.getCustomName().equals("Billy, King of Pigs")) {
                 event.setCancelled(true);
 
             }
+
         }
     }
 
@@ -510,6 +514,26 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             }
         }
     }
+
+    //Billy Offering Analyser
+    @EventHandler
+    public void onInventoryPickupItemEvent(InventoryPickupItemEvent event) {
+        Inventory inventory = event.getInventory();             //Get the Inventory that took the item
+        Material itemType = event.getItem().getItemStack().getType();   //Get the item that was picked up
+        if (inventory.getHolder() instanceof Hopper) {          //Check inventory is a hopper
+        Hopper hopper = (Hopper) inventory.getHolder();
+            Location hopperLocation = hopper.getLocation();     //Get the hopper location and store xyz
+            int x = hopperLocation.getBlockX();
+            int y = hopperLocation.getBlockY();
+            int z = hopperLocation.getBlockZ();
+            if (532<x&&x<536&&y==18&&-214<z&&z<-210){           // Check this is a Billy hopper
+                switch (itemType) {
+
+                }
+            }
+        }
+    }
+
 
     private class PigRainRunnable implements Runnable {
         private World world;
