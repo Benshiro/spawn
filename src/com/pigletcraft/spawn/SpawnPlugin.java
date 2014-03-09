@@ -474,9 +474,26 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             Pig pig = (Pig) victim;
             if (pig.hasMetadata("pig_rain") || pig.getCustomName().equals("Billy, King of Pigs")) {
                 event.setCancelled(true);
+                return;
 
             }
 
+        }
+
+        if (victim instanceof LeashHitch) {
+            LeashHitch leashHitch = (LeashHitch) victim;
+            World world = leashHitch.getWorld();
+            Location billyLeashLocation = new Location(world, 534, 25, -223);
+            Location leashLocation = leashHitch.getLocation();
+            if (billyLeashLocation.getBlockX() == leashLocation.getBlockX()) {
+                if (billyLeashLocation.getBlockY() == leashLocation.getBlockY()) {
+                    if (billyLeashLocation.getBlockZ() == leashLocation.getBlockZ()) {
+                        event.setCancelled(true);
+                    }
+                }
+
+
+            }
         }
     }
 
@@ -528,6 +545,8 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             int z = hopperLocation.getBlockZ();
             if (532 < x && x < 536 && y == 18 && -214 < z && z < -210) {           // Check this is a Billy hopper
 
+                hopperLocation.getBlock().setType(Material.AIR);
+                hopperLocation.getBlock().setType(Material.HOPPER);
 
                 switch (itemType) {
                     case GRILLED_PORK:
