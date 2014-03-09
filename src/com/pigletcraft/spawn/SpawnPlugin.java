@@ -3,6 +3,7 @@ package com.pigletcraft.spawn;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
+import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
@@ -34,10 +35,12 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -59,6 +62,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     private ArrayList<FireworkLocation> fireworkSpawnerLocations;
     private int fireworkCounter = 0;
     private ConcurrentLinkedQueue<Pig> pigRain;
+    private ConcurrentHashMap<BillyBomber, BukkitTask> billyBomberHashMap;
     private Color[] colors;
 
     private WorldGuardPlugin getWorldGuard() {
@@ -76,6 +80,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         colors = new Color[]{Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON, Color.fromRGB(0xFF7F00), Color.fromRGB(0xD63400), Color.fromRGB(0x8E0F08), Color.fromRGB(0xDEF3F8), Color.fromRGB(0x32A2A4), Color.fromRGB(0x17529E), Color.NAVY, Color.ORANGE, Color.PURPLE, Color.RED, Color.SILVER, Color.TEAL, Color.WHITE, Color.YELLOW, Color.fromRGB(255, 123, 0)};
 
+        this.billyBomberHashMap = new ConcurrentHashMap<>();
         this.pigRain = new ConcurrentLinkedQueue<>();
         this.fireworkSpawnerLocations = new ArrayList<>();
 
@@ -550,18 +555,48 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
                 switch (itemType) {
                     case GRILLED_PORK:
-                        Location pillarOne = new Location(hopper.getWorld(), 543, 21, -210);
-                        Location pillarTwo = new Location(hopper.getWorld(), 525, 21, -210);
-                        for (int i = 1; i < 11; i++) {
-                            pillarOne.getWorld().getBlockAt(pillarOne).setTypeId(46);
-                            pillarTwo.getWorld().getBlockAt(pillarTwo).setTypeId(46);
-                        }
+
+
+
+                        RegionManager rm = worldGuard.getRegionManager(Bukkit.getWorld("world"));
+                        ProtectedRegion r = rm.getRegion("spawn");
+                        r.setFlag(DefaultFlag.TNT, "allow");
+
+                        BillyBomber billyBomber = new BillyBomber(0);
+                        billyBomberHashMap.put(billyBomber, Bukkit.getScheduler().runTaskTimer(this, billyBomber, 0, 2));
+
+
                         break;
 
 
                 }
             }
         }
+    }
+
+    private class BillyBomber implements Runnable {
+        int cycles;
+
+        public BillyBomber(int cycles) {
+            this.cycles = cycles;
+        }
+
+        @Override
+        public void run() {
+
+
+            Location pillarOne = new Location(Bukkit.getWorld("world"), 534, 23, -217);
+            for (int i = 0; i < 20; i++) {
+                Bukkit.getWorld("world").spawnEntity(pillarOne, EntityType.PRIMED_TNT);
+
+            }
+
+            cycles++;
+            if (cycles >= 10) {
+                billyBomberHashMap.get(this).cancel();
+            }
+        }
+
     }
 
 
