@@ -1,9 +1,11 @@
 package com.pigletcraft.spawn;
 
+import com.pigletcraft.spawn.offerings.CarrotOffering;
+import com.pigletcraft.spawn.offerings.Offering;
+import com.pigletcraft.spawn.offerings.PorkChopOffering;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.*;
@@ -35,12 +37,10 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -62,8 +62,9 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     private ArrayList<FireworkLocation> fireworkSpawnerLocations;
     private int fireworkCounter = 0;
     private ConcurrentLinkedQueue<Pig> pigRain;
-    private ConcurrentHashMap<BillyBomber, BukkitTask> billyBomberHashMap;
     private Color[] colors;
+
+    private HashMap<Material, Offering> configuredOfferings;
 
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
@@ -80,9 +81,10 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         colors = new Color[]{Color.AQUA, Color.BLUE, Color.FUCHSIA, Color.GREEN, Color.LIME, Color.MAROON, Color.fromRGB(0xFF7F00), Color.fromRGB(0xD63400), Color.fromRGB(0x8E0F08), Color.fromRGB(0xDEF3F8), Color.fromRGB(0x32A2A4), Color.fromRGB(0x17529E), Color.NAVY, Color.ORANGE, Color.PURPLE, Color.RED, Color.SILVER, Color.TEAL, Color.WHITE, Color.YELLOW, Color.fromRGB(255, 123, 0)};
 
-        this.billyBomberHashMap = new ConcurrentHashMap<>();
         this.pigRain = new ConcurrentLinkedQueue<>();
         this.fireworkSpawnerLocations = new ArrayList<>();
+
+        configureOfferings();
 
         try {
             FileInputStream fileInputStream = new FileInputStream("fireworks.obj");
@@ -91,6 +93,19 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void configureOfferings() {
+
+        this.configuredOfferings = new HashMap<>();
+        World world = Bukkit.getWorld("world");
+
+        // Pork Chop
+        configuredOfferings.put(Material.GRILLED_PORK, new PorkChopOffering(this, world));
+
+        // Carrot
+        configuredOfferings.put(Material.CARROT, new CarrotOffering(this, world));
 
     }
 
@@ -233,6 +248,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     private void spawnCreeperFirework(Firework fireWork) {
+
         FireworkMeta fireworkMeta = fireWork.getFireworkMeta();
 
         FireworkEffect.Builder effectBuilder = FireworkEffect.builder();
@@ -249,6 +265,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     private void spawnBallFirework(Firework fireWork) {
+
         double random = Math.random() * (colors.length - 1);
         int intRandom = (int) Math.round(random);
 
@@ -277,14 +294,14 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     private void spawnFireworks(Player player) {
+
         World world = player.getWorld();
         Location location = player.getLocation();
 
         for (int i = 0; i < 5; i++) {
+
             location.setX(location.getBlockX() + i);
-
             Firework fireWork = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
-
             int random = (int) Math.round(Math.random() * 10);
 
             switch (random) {
@@ -305,6 +322,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
         switch (cmd.getName()) {
 
             case "scanfw":
@@ -391,11 +409,10 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                     l.setZ(l.getBlockZ() + 1);
                     l.setY(l.getBlockY());
                     l.setX(l.getBlockX());
-                    l.getWorld().getBlockAt(l).setTypeId(46);
+                    l.getWorld().getBlockAt(l).setType(Material.TNT);
                     return true;
                 }
                 break;
-
 
         }
 
@@ -403,6 +420,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     public boolean inSpawn(Player player) {
+
         Vector pt = toVector(player.getLocation()); // This also takes a location
 
         RegionManager regionManager = worldGuard.getRegionManager(player.getWorld());
@@ -424,6 +442,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
+
         Player player = event.getPlayer();
 
         if (player.getItemInHand().getType() == Material.STICK) {
@@ -473,6 +492,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
+
         Entity victim = event.getEntity();
 
         if (victim instanceof Pig) {
@@ -480,9 +500,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             if (pig.hasMetadata("pig_rain") || pig.getCustomName().equals("Billy, King of Pigs")) {
                 event.setCancelled(true);
                 return;
-
             }
-
         }
 
         if (victim instanceof LeashHitch) {
@@ -496,8 +514,6 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                         event.setCancelled(true);
                     }
                 }
-
-
             }
         }
     }
@@ -553,52 +569,12 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 hopperLocation.getBlock().setType(Material.AIR);
                 hopperLocation.getBlock().setType(Material.HOPPER);
 
-                switch (itemType) {
-                    case GRILLED_PORK:
-
-
-
-                        RegionManager rm = worldGuard.getRegionManager(Bukkit.getWorld("world"));
-                        ProtectedRegion r = rm.getRegion("spawn");
-                        r.setFlag(DefaultFlag.TNT, "allow");
-
-                        BillyBomber billyBomber = new BillyBomber(0);
-                        billyBomberHashMap.put(billyBomber, Bukkit.getScheduler().runTaskTimer(this, billyBomber, 0, 2));
-
-
-                        break;
-
-
+                if (configuredOfferings.containsKey(itemType)) {
+                    configuredOfferings.get(itemType).grantOffering();
                 }
             }
         }
     }
-
-    private class BillyBomber implements Runnable {
-        int cycles;
-
-        public BillyBomber(int cycles) {
-            this.cycles = cycles;
-        }
-
-        @Override
-        public void run() {
-
-
-            Location pillarOne = new Location(Bukkit.getWorld("world"), 534, 23, -217);
-            for (int i = 0; i < 20; i++) {
-                Bukkit.getWorld("world").spawnEntity(pillarOne, EntityType.PRIMED_TNT);
-
-            }
-
-            cycles++;
-            if (cycles >= 10) {
-                billyBomberHashMap.get(this).cancel();
-            }
-        }
-
-    }
-
 
     private class PigRainRunnable implements Runnable {
         private World world;
@@ -663,7 +639,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     private class FireworkRunnable implements Runnable {
 
-        private Location[] spanwerLocations;
+        private Location[] spawnerLocations;
         private World world;
         private long startTime;
         private int mode;
@@ -673,7 +649,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
             this.world = world;
             this.mode = mode;
             this.parent = parent;
-            this.spanwerLocations = locations;
+            this.spawnerLocations = locations;
 
             startTime = System.currentTimeMillis();
         }
@@ -681,7 +657,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         @Override
         public void run() {
 
-            for (Location l : spanwerLocations) {
+            for (Location l : spawnerLocations) {
                 Firework firework = (Firework) world.spawnEntity(l, EntityType.FIREWORK);
                 spawnBallFirework(firework);
             }
@@ -692,7 +668,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                         getServer().getScheduler().cancelTask(fireWorkTaskID);
 
                         // Schedule new task
-                        fireWorkTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new FireworkRunnable(getServer().getWorld("world"), 1, parent, spanwerLocations), 20L, 10L);
+                        fireWorkTaskID = getServer().getScheduler().scheduleSyncRepeatingTask(parent, new FireworkRunnable(getServer().getWorld("world"), 1, parent, spawnerLocations), 20L, 10L);
                     }
 
                     break;
