@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -19,7 +20,7 @@ public class PorkChopOffering extends Offering {
     }
 
     @Override
-    public void grantOffering() {
+    public void grantOffering(Player player) {
         BillyBomber billyBomber = new BillyBomber(0);
         billyBomberHashMap.put(billyBomber, Bukkit.getScheduler().runTaskTimer(super.plugin, billyBomber, 0, 2));
     }

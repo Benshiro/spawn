@@ -26,6 +26,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.Inventory;
@@ -35,12 +36,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -419,7 +422,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         return true;
     }
 
-    public boolean inSpawn(Player player) {
+    public boolean inRegion(Player player, String regionName) {
 
         Vector pt = toVector(player.getLocation()); // This also takes a location
 
@@ -427,7 +430,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         ApplicableRegionSet set = regionManager.getApplicableRegions(pt);
 
         for (ProtectedRegion region : set) {
-            if (region.getId().equalsIgnoreCase("spawn")) {
+            if (region.getId().equalsIgnoreCase(regionName)) {
                 return true;
             }
         }
@@ -459,7 +462,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         Player p = event.getPlayer();
 
-        if (p.isOp() && inSpawn(p)) {
+        if (p.isOp() && inRegion(p, "spawn")) {
             Block b = event.getBlock();
             if (b.getType() == Material.SKULL) {
                 Skull skull = (Skull) b.getState();
@@ -478,7 +481,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         Player p = event.getPlayer();
 
-        if (p.isOp() && inSpawn(p)) {
+        if (p.isOp() && inRegion(p, "spawn")) {
             Block b = event.getBlock();
             if (b.getType() == Material.SKULL) {
                 if (p.getItemInHand().getType() == Material.SKULL_ITEM) {
@@ -546,7 +549,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
             // P.I.G code
             if (victim.getType() == EntityType.PLAYER) {
-                if (inSpawn(player)) {
+                if (inRegion(player, "spawn")) {
                     spawnPIG(player);
                 }
             }
@@ -569,10 +572,33 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 hopperLocation.getBlock().setType(Material.AIR);
                 hopperLocation.getBlock().setType(Material.HOPPER);
 
-                if (configuredOfferings.containsKey(itemType)) {
-                    configuredOfferings.get(itemType).grantOffering();
+                Item item = event.getItem();
+                if (item.hasMetadata("droppedBy")) {
+
+
+                    List<MetadataValue> metadata = event.getItem().getMetadata("droppedBy");
+                    if (metadata.size() >= 0) {
+                        String playerName = metadata.get(0).asString();
+                        Player droppedBy = Bukkit.getPlayer(playerName);
+                        if (droppedBy == null) return;
+
+                        if (configuredOfferings.containsKey(itemType)) {
+                            configuredOfferings.get(itemType).grantOffering(droppedBy);
+                        } else {
+
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    //
+    @EventHandler
+    public void onItemDrop(PlayerDropItemEvent event) {
+        Player player = event.getPlayer();
+        if (inRegion(player, "throneroom")) {
+            event.getItemDrop().setMetadata("droppedBy", new FixedMetadataValue(this, player.getName()));
         }
     }
 
