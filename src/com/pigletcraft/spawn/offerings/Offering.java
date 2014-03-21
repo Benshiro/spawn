@@ -1,5 +1,6 @@
 package com.pigletcraft.spawn.offerings;
 
+import com.pigletcraft.spawn.SpawnPlugin;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -7,12 +8,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class Offering {
 
     protected World world;
-    protected JavaPlugin plugin;
+    protected SpawnPlugin plugin;
     protected Player player;
 
     public abstract void grantOffering(Player player);
 
-    public Offering(JavaPlugin plugin, World world) {
+    public Offering(SpawnPlugin plugin, World world) {
         this.world = world;
         this.plugin = plugin;
 

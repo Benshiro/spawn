@@ -69,6 +69,16 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     private HashMap<Material, Offering> configuredOfferings;
 
+    private boolean canBillyBomb = true;
+
+    public boolean getcanBillyBomb() {
+        return canBillyBomb;
+    }
+
+    public synchronized void setCanBillyBomb(boolean value) {
+        this.canBillyBomb = value;
+    }
+
     private WorldGuardPlugin getWorldGuard() {
         Plugin plugin = getServer().getPluginManager().getPlugin("WorldGuard");
         if (plugin == null || !(plugin instanceof WorldGuardPlugin)) {
@@ -108,7 +118,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         configuredOfferings.put(Material.GRILLED_PORK, new PorkChopOffering(this, world));
 
         // Carrot
-        configuredOfferings.put(Material.CARROT, new CarrotOffering(this, world));
+        configuredOfferings.put(Material.CARROT_ITEM, new CarrotOffering(this, world));
 
     }
 
@@ -559,33 +569,34 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     //Billy Offering Analyser
     @EventHandler
     public void onInventoryPickupItemEvent(InventoryPickupItemEvent event) {
-        Inventory inventory = event.getInventory();             //Get the Inventory that took the item
+
+        Inventory inventory = event.getInventory();                     //Get the Inventory that took the item
         Material itemType = event.getItem().getItemStack().getType();   //Get the item that was picked up
-        if (inventory.getHolder() instanceof Hopper) {          //Check inventory is a hopper
+        if (inventory.getHolder() instanceof Hopper) {                  //Check inventory is a hopper
             Hopper hopper = (Hopper) inventory.getHolder();
-            Location hopperLocation = hopper.getLocation();     //Get the hopper location and store xyz
+            Location hopperLocation = hopper.getLocation();             //Get the hopper location and store xyz
             int x = hopperLocation.getBlockX();
             int y = hopperLocation.getBlockY();
             int z = hopperLocation.getBlockZ();
-            if (532 < x && x < 536 && y == 18 && -214 < z && z < -210) {           // Check this is a Billy hopper
+            if (532 < x && x < 536 && y == 18 && -214 < z && z < -210) {// Check this is a Billy hopper
 
                 hopperLocation.getBlock().setType(Material.AIR);
                 hopperLocation.getBlock().setType(Material.HOPPER);
 
                 Item item = event.getItem();
-                if (item.hasMetadata("droppedBy")) {
 
+                if (item.hasMetadata("droppedBy")) {
 
                     List<MetadataValue> metadata = event.getItem().getMetadata("droppedBy");
                     if (metadata.size() >= 0) {
+
                         String playerName = metadata.get(0).asString();
                         Player droppedBy = Bukkit.getPlayer(playerName);
+
                         if (droppedBy == null) return;
 
                         if (configuredOfferings.containsKey(itemType)) {
                             configuredOfferings.get(itemType).grantOffering(droppedBy);
-                        } else {
-
                         }
                     }
                 }
@@ -603,6 +614,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     private class PigRainRunnable implements Runnable {
+
         private World world;
         private Player player;
         private JavaPlugin parent;
@@ -619,6 +631,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         @Override
         public void run() {
+
             int x = pigCounter.incrementAndGet();
 
             int randomX = (int) (Math.random() * 15);
@@ -652,6 +665,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     }
 
     private class PigletRemoverRunnable implements Runnable {
+
         @Override
         public void run() {
             if (pigRain.size() > 0) {
