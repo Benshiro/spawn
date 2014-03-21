@@ -2,6 +2,7 @@ package com.pigletcraft.spawn.offerings;
 
 import com.pigletcraft.spawn.SpawnPlugin;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.EntityType;
@@ -22,9 +23,10 @@ public class PorkChopOffering extends Offering {
     @Override
     public void grantOffering(Player player) {
         BillyBomber billyBomber = new BillyBomber(0);
-        if (plugin.getcanBillyBomb()) {
+        if (plugin.getCanBillyBomb()) {
             plugin.setCanBillyBomb(false);
             billyBomberHashMap.put(billyBomber, Bukkit.getScheduler().runTaskTimer(super.plugin, billyBomber, 0, 2));
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is displeased!");
         }
     }
 

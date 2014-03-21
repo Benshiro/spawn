@@ -71,7 +71,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
     private boolean canBillyBomb = true;
 
-    public boolean getcanBillyBomb() {
+    public boolean getCanBillyBomb() {
         return canBillyBomb;
     }
 
@@ -114,8 +114,11 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         this.configuredOfferings = new HashMap<>();
         World world = Bukkit.getWorld("world");
 
-        // Pork Chop
+        // Grilled Pork Chop
         configuredOfferings.put(Material.GRILLED_PORK, new PorkChopOffering(this, world));
+
+        // Pork Chop
+        configuredOfferings.put(Material.PORK, new PorkChopOffering(this, world));
 
         // Carrot
         configuredOfferings.put(Material.CARROT_ITEM, new CarrotOffering(this, world));

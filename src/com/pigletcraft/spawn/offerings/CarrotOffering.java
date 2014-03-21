@@ -1,6 +1,7 @@
 package com.pigletcraft.spawn.offerings;
 
 import com.pigletcraft.spawn.SpawnPlugin;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -12,6 +13,8 @@ public class CarrotOffering extends Offering {
 
     @Override
     public void grantOffering(Player player) {
-        player.sendMessage("Billy is pleased!");
+        player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is pleased!");
+
+
     }
 }
