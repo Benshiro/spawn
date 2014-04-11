@@ -16,6 +16,5 @@ public abstract class Offering {
     public Offering(SpawnPlugin plugin, World world) {
         this.world = world;
         this.plugin = plugin;
-
     }
 }

@@ -1,5 +1,6 @@
 package com.pigletcraft.spawn;
 
+import com.pigletcraft.spawn.offerings.BeefOffering;
 import com.pigletcraft.spawn.offerings.CarrotOffering;
 import com.pigletcraft.spawn.offerings.Offering;
 import com.pigletcraft.spawn.offerings.PorkChopOffering;
@@ -114,14 +115,16 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         this.configuredOfferings = new HashMap<>();
         World world = Bukkit.getWorld("world");
 
-        // Grilled Pork Chop
-        configuredOfferings.put(Material.GRILLED_PORK, new PorkChopOffering(this, world));
-
         // Pork Chop
+        configuredOfferings.put(Material.GRILLED_PORK, new PorkChopOffering(this, world));
         configuredOfferings.put(Material.PORK, new PorkChopOffering(this, world));
 
         // Carrot
         configuredOfferings.put(Material.CARROT_ITEM, new CarrotOffering(this, world));
+
+        // Beef
+        configuredOfferings.put(Material.RAW_BEEF, new BeefOffering(this, world));
+        configuredOfferings.put(Material.COOKED_BEEF, new BeefOffering(this, world));
 
     }
 
@@ -183,6 +186,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 ((PigZombie) guard).setAngry(true);
             }
             guard.setTarget(player);
+
         }
     }
 
