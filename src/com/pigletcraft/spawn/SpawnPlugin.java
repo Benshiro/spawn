@@ -1,9 +1,6 @@
 package com.pigletcraft.spawn;
 
-import com.pigletcraft.spawn.offerings.BeefOffering;
-import com.pigletcraft.spawn.offerings.CarrotOffering;
-import com.pigletcraft.spawn.offerings.Offering;
-import com.pigletcraft.spawn.offerings.PorkChopOffering;
+import com.pigletcraft.spawn.offerings.*;
 import com.sk89q.worldedit.Vector;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
@@ -126,6 +123,8 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         configuredOfferings.put(Material.RAW_BEEF, new BeefOffering(this, world));
         configuredOfferings.put(Material.COOKED_BEEF, new BeefOffering(this, world));
 
+        //Gravel
+        configuredOfferings.put(Material.GRAVEL, new GravelOffering(this, world));
     }
 
     @Override
