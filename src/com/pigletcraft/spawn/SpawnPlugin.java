@@ -123,6 +123,16 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
         //Gravel
         configuredOfferings.put(Material.GRAVEL, new GravelOffering(this, world));
+
+        //Cobblestone
+        configuredOfferings.put(Material.COBBLESTONE, new CobbleStoneOffering(this, world));
+
+        //Cake
+        configuredOfferings.put(Material.CAKE, new CakeOffering(this, world));
+
+         //Golden Carrot
+        configuredOfferings.put(Material.GOLDEN_CARROT, new GoldenCarrotOffering(this, world));
+
     }
 
     @Override

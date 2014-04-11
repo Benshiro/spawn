@@ -12,14 +12,14 @@ import org.bukkit.potion.PotionEffectType;
 /**
  * Created by Benshiro on 11/04/14.
  */
-public class GravelOffering extends Offering {
-    public GravelOffering(SpawnPlugin plugin, World world) {
+public class CobbleStoneOffering extends Offering {
+    public CobbleStoneOffering(SpawnPlugin plugin, World world) {
         super(plugin, world);
     }
 
     @Override
     public void grantOffering(Player player) {
-        player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is unimpressed. Nobody likes gravel.");
+        player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is unimpressed.");
         if (player.hasPotionEffect(PotionEffectType.BLINDNESS)){
                    player.removePotionEffect(PotionEffectType.BLINDNESS);
                }
