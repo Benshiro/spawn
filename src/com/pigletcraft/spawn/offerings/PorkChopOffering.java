@@ -1,10 +1,7 @@
 package com.pigletcraft.spawn.offerings;
 
 import com.pigletcraft.spawn.SpawnPlugin;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,11 +19,14 @@ public class PorkChopOffering extends Offering {
 
     @Override
     public void grantOffering(Player player) {
+        this.player = player;
         BillyBomber billyBomber = new BillyBomber(0);
         if (plugin.getCanBillyBomb()) {
             plugin.setCanBillyBomb(false);
             billyBomberHashMap.put(billyBomber, Bukkit.getScheduler().runTaskTimer(super.plugin, billyBomber, 0, 2));
             player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is displeased!");
+            Location location = player.getLocation();
+            player.playSound(location, Sound.PIG_DEATH,1.0f,0.5f);
         }
     }
 

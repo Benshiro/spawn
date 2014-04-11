@@ -601,6 +601,9 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                         if (configuredOfferings.containsKey(itemType)) {
                             configuredOfferings.get(itemType).grantOffering(droppedBy);
                         }
+                        else{
+                            droppedBy.sendMessage(ChatColor.LIGHT_PURPLE + "Billy seems nonplussed...");
+                        }
                     }
                 }
             }
