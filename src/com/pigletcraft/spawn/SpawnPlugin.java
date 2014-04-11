@@ -64,9 +64,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     private int fireworkCounter = 0;
     private ConcurrentLinkedQueue<Pig> pigRain;
     private Color[] colors;
-
     private HashMap<Material, Offering> configuredOfferings;
-
     private boolean canBillyBomb = true;
 
     public boolean getCanBillyBomb() {
@@ -513,6 +511,9 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
 
         Entity victim = event.getEntity();
+        if (victim == null) {
+            return;
+        }
 
         if (victim instanceof Pig) {
             Pig pig = (Pig) victim;
@@ -535,6 +536,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                 }
             }
         }
+
     }
 
     /**
@@ -546,8 +548,13 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
      */
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
         Entity entity = event.getDamager();
         Entity victim = event.getEntity();
+
+        if (entity == null || victim == null) {
+            return;
+        }
 
         if (entity instanceof Player) {
             Player player = (Player) entity;
@@ -603,8 +610,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
 
                         if (configuredOfferings.containsKey(itemType)) {
                             configuredOfferings.get(itemType).grantOffering(droppedBy);
-                        }
-                        else{
+                        } else {
                             droppedBy.sendMessage(ChatColor.LIGHT_PURPLE + "Billy seems nonplussed...");
                         }
                     }
