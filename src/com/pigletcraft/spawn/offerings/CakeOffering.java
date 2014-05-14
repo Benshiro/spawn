@@ -16,7 +16,7 @@ public class CakeOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
+    public void grantOffering(Player player, Object object) {
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy thinks your offering is a lie...");
              Location location = player.getLocation();
         player.playSound(location, Sound.PIG_IDLE, 1f, 1.1f);

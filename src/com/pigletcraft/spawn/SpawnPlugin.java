@@ -118,8 +118,8 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         configuredOfferings.put(Material.CARROT_ITEM, new CarrotOffering(this, world));
 
         // Beef
-        configuredOfferings.put(Material.RAW_BEEF, new BeefOffering(this, world));
-        configuredOfferings.put(Material.COOKED_BEEF, new BeefOffering(this, world));
+        //configuredOfferings.put(Material.RAW_BEEF, new BeefOffering(this, world));
+        //configuredOfferings.put(Material.COOKED_BEEF, new BeefOffering(this, world));
 
         //Gravel
         configuredOfferings.put(Material.GRAVEL, new GravelOffering(this, world));
@@ -130,8 +130,151 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
         //Cake
         configuredOfferings.put(Material.CAKE, new CakeOffering(this, world));
 
-         //Golden Carrot
+        //Golden Carrot
         configuredOfferings.put(Material.GOLDEN_CARROT, new GoldenCarrotOffering(this, world));
+
+        //Leather Armour
+        configuredOfferings.put(Material.LEATHER_HELMET, new LeatherArmourOffering(this, world));
+        configuredOfferings.put(Material.LEATHER_CHESTPLATE, new LeatherArmourOffering(this, world));
+        configuredOfferings.put(Material.LEATHER_LEGGINGS, new LeatherArmourOffering(this, world));
+        configuredOfferings.put(Material.LEATHER_BOOTS, new LeatherArmourOffering(this, world));
+
+        //Dirt
+        configuredOfferings.put(Material.DIRT, new DirtOffering(this, world));
+
+        //Grass
+        configuredOfferings.put(Material.GRASS, new GrassOffering(this, world));
+
+        //Stone
+        configuredOfferings.put(Material.STONE, new StoneOffering(this, world));
+
+        //Plank
+        configuredOfferings.put(Material.WOOD, new PlankOffering(this, world));
+
+        //GoldOre
+        configuredOfferings.put(Material.GOLD_ORE, new GoldOreOffering(this, world));
+
+        //Sand
+        configuredOfferings.put(Material.SAND, new SandOffering(this, world));
+        configuredOfferings.put(Material.SANDSTONE, new SandOffering(this, world));
+
+        //IronOre
+        configuredOfferings.put(Material.IRON_ORE, new IronOreOffering(this, world));
+
+        //Coal
+        configuredOfferings.put(Material.COAL_ORE, new CoalOreOffering(this, world));
+        configuredOfferings.put(Material.COAL_BLOCK, new CoalOreOffering(this, world));
+        configuredOfferings.put(Material.COAL, new CoalOreOffering(this, world));
+
+        //Log
+        configuredOfferings.put(Material.LOG, new LogOffering(this, world));
+        configuredOfferings.put(Material.LOG_2, new LogOffering(this, world));
+
+        //Glass
+        configuredOfferings.put(Material.GLASS, new GlassOffering(this, world));
+        configuredOfferings.put(Material.THIN_GLASS, new GlassOffering(this, world));
+        configuredOfferings.put(Material.STAINED_GLASS, new GlassOffering(this, world));
+        configuredOfferings.put(Material.STAINED_GLASS_PANE, new GlassOffering(this, world));
+
+        //Lapis
+        configuredOfferings.put(Material.LAPIS_BLOCK, new LapisOffering(this, world));
+        configuredOfferings.put(Material.LAPIS_ORE, new LapisOffering(this, world));
+
+        //Wool
+        configuredOfferings.put(Material.WOOL, new WoolOffering(this, world));
+
+        //Gold
+        configuredOfferings.put(Material.GOLD_BLOCK, new GoldOffering(this, world));
+        configuredOfferings.put(Material.GOLD_INGOT, new GoldOffering(this, world));
+        configuredOfferings.put(Material.GOLD_NUGGET, new GoldOffering(this, world));
+
+        //Iron
+        configuredOfferings.put(Material.IRON_BLOCK, new IronOffering(this, world));
+        configuredOfferings.put(Material.IRON_INGOT, new IronOffering(this, world));
+
+        //Stairs
+        configuredOfferings.put(Material.SANDSTONE_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.ACACIA_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.BIRCH_WOOD_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.BRICK_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.COBBLESTONE_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.DARK_OAK_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.JUNGLE_WOOD_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.NETHER_BRICK_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.QUARTZ_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.SMOOTH_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.SPRUCE_WOOD_STAIRS, new StairsOffering(this, world));
+        configuredOfferings.put(Material.WOOD_STAIRS, new StairsOffering(this, world));
+
+        //Step
+        configuredOfferings.put(Material.STEP, new StepOffering(this, world));
+        configuredOfferings.put(Material.WOOD_STEP, new StepOffering(this, world));
+
+        //Brick
+        configuredOfferings.put(Material.BRICK, new BrickOffering(this, world));
+        configuredOfferings.put(Material.SMOOTH_BRICK, new BrickOffering(this, world));
+
+        //Bookshelf
+        configuredOfferings.put(Material.BOOKSHELF, new BookshelfOffering(this, world));
+        configuredOfferings.put(Material.BOOK, new BookshelfOffering(this, world));
+        configuredOfferings.put(Material.BOOK_AND_QUILL, new BookshelfOffering(this, world));
+        configuredOfferings.put(Material.ENCHANTED_BOOK, new BookshelfOffering(this, world));
+        configuredOfferings.put(Material.WRITTEN_BOOK, new BookshelfOffering(this, world));
+
+        //Obsidian
+        configuredOfferings.put(Material.OBSIDIAN, new ObsidianOffering(this, world));
+
+        //Diamond
+        configuredOfferings.put(Material.DIAMOND, new DiamondOffering(this, world));
+        configuredOfferings.put(Material.DIAMOND_BLOCK, new DiamondOffering(this, world));
+
+        //Ice
+        configuredOfferings.put(Material.ICE, new IceOffering(this, world));
+        configuredOfferings.put(Material.PACKED_ICE, new IceOffering(this, world));
+
+        //Snow
+        configuredOfferings.put(Material.SNOW, new SnowOffering(this, world));
+        configuredOfferings.put(Material.SNOW_BALL, new SnowOffering(this, world));
+        configuredOfferings.put(Material.SNOW_BLOCK, new SnowOffering(this, world));
+
+        //Clay
+        configuredOfferings.put(Material.CLAY, new ClayOffering(this, world));
+        configuredOfferings.put(Material.CLAY_BALL, new ClayOffering(this, world));
+        configuredOfferings.put(Material.CLAY_BRICK, new ClayOffering(this, world));
+        configuredOfferings.put(Material.STAINED_CLAY, new ClayOffering(this, world));
+        configuredOfferings.put(Material.HARD_CLAY, new ClayOffering(this, world));
+
+        //Pumpkin
+        configuredOfferings.put(Material.PUMPKIN, new PumpkinOffering(this, world));
+        configuredOfferings.put(Material.JACK_O_LANTERN, new PumpkinOffering(this, world));
+
+        //Nether
+        configuredOfferings.put(Material.NETHERRACK, new NetherOffering(this, world));
+        configuredOfferings.put(Material.NETHER_BRICK, new NetherOffering(this, world));
+        configuredOfferings.put(Material.NETHER_BRICK_ITEM, new NetherOffering(this, world));
+        configuredOfferings.put(Material.SOUL_SAND, new NetherOffering(this, world));
+        configuredOfferings.put(Material.QUARTZ_ORE, new NetherOffering(this, world));
+
+        //Glowstone
+        configuredOfferings.put(Material.GLOWSTONE, new GlowstoneOffering(this, world));
+        configuredOfferings.put(Material.GLOWSTONE_DUST, new GlowstoneOffering(this, world));
+
+        //Melon
+        configuredOfferings.put(Material.MELON, new MelonOffering(this, world));
+        configuredOfferings.put(Material.MELON_BLOCK, new MelonOffering(this, world));
+
+        //Endstone
+        configuredOfferings.put(Material.ENDER_STONE, new EndstoneOffering(this, world));
+
+        //Emerald
+        configuredOfferings.put(Material.EMERALD, new EmeraldOffering(this, world));
+        configuredOfferings.put(Material.EMERALD_BLOCK, new EmeraldOffering(this, world));
+        configuredOfferings.put(Material.EMERALD_ORE, new EmeraldOffering(this, world));
+
+        //Emerald
+        configuredOfferings.put(Material.QUARTZ, new QuartzOffering(this, world));
+        configuredOfferings.put(Material.QUARTZ_BLOCK, new QuartzOffering(this, world));
+
 
     }
 
@@ -619,7 +762,7 @@ public class SpawnPlugin extends JavaPlugin implements Listener {
                         if (droppedBy == null) return;
 
                         if (configuredOfferings.containsKey(itemType)) {
-                            configuredOfferings.get(itemType).grantOffering(droppedBy);
+                            configuredOfferings.get(itemType).grantOffering(droppedBy, item);
                         } else {
                             droppedBy.sendMessage(ChatColor.LIGHT_PURPLE + "Billy seems nonplussed...");
                         }

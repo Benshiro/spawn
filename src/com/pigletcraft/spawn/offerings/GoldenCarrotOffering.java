@@ -18,15 +18,15 @@ public class GoldenCarrotOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
-        player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy very is pleased!");
+    public void grantOffering(Player player, Object object) {
+        player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is very pleased!");
                player.sendMessage(ChatColor.LIGHT_PURPLE + "Max health increased!");
 
                if (player.hasPotionEffect(PotionEffectType.HEALTH_BOOST)){
                    player.removePotionEffect(PotionEffectType.HEALTH_BOOST);
                }
 
-               PotionEffect healthBoost = PotionEffectType.HEALTH_BOOST.createEffect(36000,1);
+               PotionEffect healthBoost = PotionEffectType.HEALTH_BOOST.createEffect(36000,0);
                player.addPotionEffect(healthBoost);
                player.setHealth(28);
                Location location = player.getLocation();

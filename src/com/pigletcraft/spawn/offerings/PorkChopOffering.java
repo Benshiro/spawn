@@ -18,7 +18,7 @@ public class PorkChopOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
+    public void grantOffering(Player player, Object object) {
         this.player = player;
         BillyBomber billyBomber = new BillyBomber(0);
         if (plugin.getCanBillyBomb()) {

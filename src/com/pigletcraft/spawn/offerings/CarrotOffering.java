@@ -15,7 +15,7 @@ public class CarrotOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
+    public void grantOffering(Player player, Object object) {
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is pleased!");
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Health and hunger restored!");
         if (player.hasPotionEffect(PotionEffectType.HEALTH_BOOST)) {

@@ -15,7 +15,7 @@ public class BeefOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
+    public void grantOffering(Player player, Object object) {
 
         World world = player.getWorld();
         Location location = player.getLocation();

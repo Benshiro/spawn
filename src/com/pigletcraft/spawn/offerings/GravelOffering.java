@@ -18,16 +18,21 @@ public class GravelOffering extends Offering {
     }
 
     @Override
-    public void grantOffering(Player player) {
+    public void grantOffering(Player player, Object object) {
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Billy is unimpressed. Nobody likes gravel.");
-        if (player.hasPotionEffect(PotionEffectType.BLINDNESS)){
-                   player.removePotionEffect(PotionEffectType.BLINDNESS);
-               }
+        if (player.hasPotionEffect(PotionEffectType.BLINDNESS)) {
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+        }
+        if (player.hasPotionEffect(PotionEffectType.CONFUSION)) {
+            player.removePotionEffect(PotionEffectType.CONFUSION);
+        }
 
-               PotionEffect blindness = PotionEffectType.BLINDNESS.createEffect(400,1);
-               player.addPotionEffect(blindness);
-               Location location = player.getLocation();
-               player.playSound(location, Sound.PIG_IDLE,1f,0.3f);
+        PotionEffect blindness = PotionEffectType.BLINDNESS.createEffect(400, 1);
+        PotionEffect confusion = PotionEffectType.CONFUSION.createEffect(400, 1);
+        player.addPotionEffect(blindness);
+        player.addPotionEffect(confusion);
+        Location location = player.getLocation();
+        player.playSound(location, Sound.PIG_IDLE, 1f, 0.3f);
 
     }
 }
